@@ -1,6 +1,6 @@
 # std.variant Is Everything Cool About D
 
-I recently read a great article by Matt Kline on how [std.visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). Being quite
+I recently read a great article by [Matt Kline](https://bitbashing.io/about.html) on how [std.visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). Being quite
 out of practice with C++ (I have long since left for the grenner pastures of D), I was curious as to how things had changed
 in my absence with all the new features added in the past couple of major revisions to the language.
 
@@ -141,7 +141,7 @@ struct variant_visitor(Fs...)
     this(Fs fs) { this.fs = fs; }
 
     import std.traits;
-    
+
     //Generate a different overload of opCall for each Fs
     static foreach(i, Fun; Fs)
     ReturnType!Fun opCall(Parameters!Fun params)
