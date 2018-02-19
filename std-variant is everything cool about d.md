@@ -34,7 +34,7 @@ assert(a.type == typeid(int));
 a += 1;
 assert(a == 43);
 
-float f = a.get!float;
+float f = a.get!float; //Coerce a to float
 assert(f == 43);
 
 a = "D rocks!";
