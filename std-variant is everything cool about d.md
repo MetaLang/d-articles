@@ -159,7 +159,7 @@ implementation to work:
 
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
-auto visitor = make_visitor!(
+auto visitor = make_visitor(
     (string s) => writeln("string: ", s),
     (int    n) => writeln("int: ", n),
     (bool   b) => writeln("bool: ", b),
