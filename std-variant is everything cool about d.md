@@ -193,8 +193,8 @@ _"But you're cheating! You can just use the new `if constexpr` to simplify the c
 entirely, just like in your D example!"_
 
 Yes, that's true. However, for one thing, doing it that way is still more 
-complicated and uglier than just passing functions to `visit` directly, and two, the D version _still_ blows C++ out of 
-the water on readability. Consider:
+complicated and uglier than just passing functions to `visit` directly, and two, the D version would _still_ blow C++ 
+out of the water on readability. Consider:
 
 ```C++
 visit([](auto& arg) {
