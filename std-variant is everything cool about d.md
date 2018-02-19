@@ -1,24 +1,24 @@
-std.variant Is Everything Cool About D
+# std.variant Is Everything Cool About D
 
-I recently read a great article by matt Kline on how [std.visit is everything wrong with modern C++](). Being quite
-out practice with C++ (I have long since left for the grenner pastures of D), I was curious as to how things had changed
+I recently read a great article by Matt Kline on how [std.visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). Being quite
+out of practice with C++ (I have long since left for the grenner pastures of D), I was curious as to how things had changed
 in my absence with all the new features added in the past couple of major revisions to the language.
 
-	Despite my relative unfamiliarity with post-2003 C++, I had heard about the addition of a library-based sum type in
+Despite my relative unfamiliarity with post-2003 C++, I had heard about the addition of a library-based sum type in
 C++17. My curiosity was mildly piqued by the news, but like many new additions to C++ in the past decade, D has had a
-completely library-based sum type [for years](). Given the oft-repeated criticism that C++ is a convoluted, complex 
-mess, and the seemingly sensational title of Mr. Kline's article, I wanted to see just what was so bad about std::visit,
-and get a feel for how well D's equivalent of std::variant and std::visit measures up.
+completely library-based sum type [for years](https://github.com/dlang/phobos/blob/eec6be69edec9601f9f856afcd25a797e845c181/std/variant.d). Given the oft-repeated criticism that C++ is a convoluted, complex 
+mess, and the seemingly sensational title of Mr. Kline's article, I wanted to see just what was so bad about `std::visit`,
+and get a feel for how well D's equivalent measures up.
 
-	My intuition going in was that the author was exaggerating for the sake of an interesting article. After all, while
+My intuition going in was that the author was exaggerating for the sake of an interesting article. After all, while
 the ergonomic of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious
-that the code could be much worse than if std::visit were implemented in D.
+that the code could be much worse than if `std::visit` were implemented in D.
 
 For the record, my intuition was completely and utterly wrong.
 
-	Before we continue, let me quickly introduce D's [std.variant]() module. The module centres around the `Variant` 
-type, which is not actually a sum type like C++'s std::variant, but a type-safe container that can contain a value of 
-any type. This is akin to std::any as opposed to std::variant, with the unfortunate coincidence that C++ used the same
+Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant)
+type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of 
+any type. This is akin to C++'s `std::any` as opposed to `std::variant`, with the unfortunate coincidence that C++ used the same
 name for its implementation of a sum type instead. The `Variant` type is used as follows:
 
 ```D
@@ -43,10 +43,10 @@ b /= 2; //Error: no possible match found for Variant / int
 
 ```
 
-	`std.variant` provides a sum type as well: enter [Algebraic](). The name `Algebraic` refers to 
+	`std.variant` provides a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
 [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one type is a "sum type". Another
 example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`. The
-former is an [alias]() for the latter that takes a compile-time specified list of which types it may contain,
+former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain,
 effectively giving us an in library sum type for free. Pretty darn cool. It's used like this:
 
 ```
@@ -68,23 +68,23 @@ Option!size_t index2 = a.indexOf(117);
 assert(index2.peek!Null);
 ```
 
-To recap:
+## To recap:
 
-	`std.variant.Variant` is the equivalent of `std::any::any`. It is a type-safe container that can contain a value of 
+- `std.variant.Variant` is the equivalent of `std::any::any`. It is a type-safe container that can contain a value of 
 any type.
 
-	`std.variant.Algebraic` is the equivalent of `std::variant::variant` and is a sum type similar to what you'd find in 
+- `std.variant.Algebraic` is the equivalent of `std::variant::variant` and is a sum type similar to what you'd find in 
 Swift, Haskell, Rust, etc. It is a thin wrapper over `Variant` that restricts what types it may contain to a comile-time
 specified list.
 
-	With that out of the way, let's now talk about what's wrong with C++'s implementation of std::visit::visit, and how 
+With that out of the way, let's now talk about what's wrong with C++'s implementation of `std::visit`, and how 
 D greatly improves on it using its powerful toolbox of compile-time, introspective features.
 
 
-	The main problem with the C++ version is that - aside from clunkier template syntax - metaprogramming is very arcane
+The main problem with the C++ version is that - aside from clunkier template syntax - metaprogramming is very arcane
 and convoluted, and there are almost no static introspection tools included out of the box, except for the absolute
 basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose).
-This makes implementing std::visit much more difficult than it has to be, and also pushes that complexity down to the
+This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to the
 consumer of the library; my eyes bled at this code from the article:
 
 ```C++
@@ -122,12 +122,11 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 ```
 
-	But this is still ugly, and it is still very complicated to write and understand. There's a lot of moving parts here.
+But this is still ugly, and it is still very complicated to write and understand. There's a lot of moving parts here.
 The fact that someone implementing `make_visitor` has to jump through such ridiculous hoops for something so simple is
 just... ridiculous. As Mr. Kline so eloquently puts it: "The rigmarole needed for std::visit is entirely insane."
 
 We can do better in D:
-
 
 ```D
 struct variant_visitor(Fs...)
@@ -136,14 +135,12 @@ struct variant_visitor(Fs...)
     this(Fs fs) { this.fs = fs; }
     
 	import std.traits;
+	//Generate a different overload of opCall for each Fs
 	static foreach(i, Fun; Fs)
-	{
-		//Generate a different overload of opCall for each Fs
 		ReturnType!Fun opCall(Parameters!Fun params)
 		{
 			return fs[i](params);
 		}
-	}
 }
 
 auto make_visitor(Fs...)(Fs fs)
@@ -152,7 +149,7 @@ auto make_visitor(Fs...)(Fs fs)
 }
 ```
 
-	And... that's it. We're done. No pain, no strain, and easy, understandable code. We can then put our much-simplified
+And... that's it. We're done. No pain, no strain, and easy, understandable code. We can then put our much-simplified
 implementation to work:
 
 ```D
@@ -165,7 +162,7 @@ auto visitor = make_visitor!(
 v.visit(visitor);
 ```
 
-	Except for one thing: this code won't compile. Why? Because the version of `visit` in D's standard library does not 
+Except for one thing: this code won't compile. Why? Because the version of `visit` in D's standard library does not 
 accept a callable struct. Sorry to mislead you, but D has no need for such an awkward construction. D is what I like to 
 call an anti-boilerplate language. In all things, D prefers the more direct method, thus, `visit` takes a compile-time 
 specified list of functions as template arguments. No messing around defining structs with callable methods and 
@@ -180,11 +177,11 @@ v.visit!(
 );
 ```
 
-	And in a puff of efficiency, we've completely obviated all this machinery necessary to use `std::visit` and greatly
+And in a puff of efficiency, we've completely obviated all this machinery necessary to use `std::visit` and greatly
 simplified our users' lives. As a bonus, this looks very similar to the built-in pattern matching syntax that you find
 in many up-and-coming languages, but completely defined _in user code_. That's pretty powerful.
 
-	"But you're cheating! You can just use the new `if constexpr` to simplify the code and cut out `make_visitor` 
+"But you're cheating! You can just use the new `if constexpr` to simplify the code and cut out `make_visitor` 
 entirely, just like in your D example!" Yes, that's true. However, for one thing, doing it that way is still more 
 complicated and ugly than just passing functions to `visit` directly, and two, the D version _still_ blows C++ out of 
 the water on readability. Consider:
