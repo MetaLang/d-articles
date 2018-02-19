@@ -124,7 +124,7 @@ auto make_visitor(Fs... fs)
 }
 ```
 
-Now as he points out, this will be simplified down to the following in C++17:
+Now as he points out, this can be simplified down to the following in C++17:
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
