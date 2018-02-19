@@ -16,6 +16,9 @@ that the code could be much worse than if `std::visit` were implemented in D.
 
 For the record, my intuition was completely and utterly wrong.
 
+
+## Exploring std.variant
+
 Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant)
 type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of 
 any type. This is akin to C++'s `std::any` as opposed to `std::variant`, with the unfortunate coincidence that C++ used the same
@@ -43,7 +46,7 @@ b /= 2; //Error: no possible match found for Variant / int
 
 ```
 
-	`std.variant` provides a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
+`std.variant` provides a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
 [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one type is a "sum type". Another
 example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`. The
 former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain,
@@ -68,6 +71,7 @@ Option!size_t index2 = a.indexOf(117);
 assert(index2.peek!Null);
 ```
 
+
 ## To recap:
 
 - `std.variant.Variant` is the equivalent of `std::any::any`. It is a type-safe container that can contain a value of 
@@ -80,6 +84,8 @@ specified list.
 With that out of the way, let's now talk about what's wrong with C++'s implementation of `std::visit`, and how 
 D greatly improves on it using its powerful toolbox of compile-time, introspective features.
 
+
+## Problems with std::visit and how D fixes them
 
 The main problem with the C++ version is that - aside from clunkier template syntax - metaprogramming is very arcane
 and convoluted, and there are almost no static introspection tools included out of the box, except for the absolute
@@ -180,6 +186,9 @@ v.visit!(
 And in a puff of efficiency, we've completely obviated all this machinery necessary to use `std::visit` and greatly
 simplified our users' lives. As a bonus, this looks very similar to the built-in pattern matching syntax that you find
 in many up-and-coming languages, but completely defined _in user code_. That's pretty powerful.
+
+
+## Other considerations
 
 "But you're cheating! You can just use the new `if constexpr` to simplify the code and cut out `make_visitor` 
 entirely, just like in your D example!" Yes, that's true. However, for one thing, doing it that way is still more 
