@@ -57,10 +57,10 @@ alias Null = typeof(null); //for convenience
 alias Option(T) = Algebraic!(T, Null);
 
 Option!size_t indexOf(int[] haystack, int needle) {
-    foreach (size_t i, int n; haystack)
-        if (n == needle)
+	foreach (size_t i, int n; haystack)
+		if (n == needle)
 			return Option!size_t(i);
-    return Option!size_t(null);
+	return Option!size_t(null);
 }
 
 int[] a = [4, 2, 210, 42, 7];
