@@ -50,7 +50,7 @@ b /= 2; //Error: no possible match found for Variant / int
 [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another
 example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`; the
 former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain.
-This effectively gives us an in-library sum type for free. Pretty darn cool. It's used like this:
+This effectively gives us an in-library sum type for free! Pretty darn cool. It's used like this:
 
 ```
 alias Null = typeof(null); //for convenience
@@ -59,7 +59,7 @@ alias Option(T) = Algebraic!(T, Null);
 Option!size_t indexOf(int[] haystack, int needle) {
     foreach (size_t i, int n; haystack)
         if (n == needle)
-        	return Option!size_t(i);
+			return Option!size_t(i);
     return Option!size_t(null);
 }
 
@@ -87,11 +87,11 @@ D greatly improves on it using its powerful toolbox of compile-time, introspecti
 
 ## Problems with std::visit and how D fixes them
 
-The main problem with the C++ version is that - aside from clunkier template syntax - metaprogramming is very arcane
+The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane
 and convoluted, and there are almost no static introspection tools included out of the box, except for the absolute
 basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose).
 This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to the
-consumer of the library; my eyes bled at this code from the article:
+consumer of the library; my eyes bled at this code from Mr. Kline's article:
 
 ```C++
 template <class... Fs>
@@ -121,7 +121,7 @@ auto make_visitor(Fs... fs)
 }
 ```
 
-Now as Mr. Kline points out, this will be simplified down to the following in C++17:
+Now as he points out, this will be simplified down to the following in C++17:
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -138,7 +138,7 @@ We can do better in D:
 struct variant_visitor(Fs...)
 {
 	Fs fs;
-    this(Fs fs) { this.fs = fs; }
+	this(Fs fs) { this.fs = fs; }
     
 	import std.traits;
 	//Generate a different overload of opCall for each Fs
@@ -185,14 +185,16 @@ v.visit!(
 
 And in a puff of efficiency, we've completely obviated all this machinery necessary to use `std::visit` and greatly
 simplified our users' lives. As a bonus, this looks very similar to the built-in pattern matching syntax that you find
-in many up-and-coming languages, but completely defined _in user code_. That's pretty powerful.
+in many up-and-coming languages, but implemented completely _in user code_. That's very powerful.
 
 
 ## Other considerations
 
-"But you're cheating! You can just use the new `if constexpr` to simplify the code and cut out `make_visitor` 
-entirely, just like in your D example!" Yes, that's true. However, for one thing, doing it that way is still more 
-complicated and ugly than just passing functions to `visit` directly, and two, the D version _still_ blows C++ out of 
+_"But you're cheating! You can just use the new `if constexpr` to simplify the code and cut out `make_visitor`
+entirely, just like in your D example!"_
+
+Yes, that's true. However, for one thing, doing it that way is still more 
+complicated and uglier than just passing functions to `visit` directly, and two, the D version _still_ blows C++ out of 
 the water on readability. Consider:
 
 ```C++
@@ -217,7 +219,7 @@ vs.
 v.visit!((arg) {
 	alias T = typeof(arg);
 
-    static if (is(T == string)) {
+	static if (is(T == string)) {
         writeln("string: ", arg);
     }
     else static if (is(T == int)) {
@@ -229,5 +231,5 @@ v.visit!((arg) {
 });
 ```
 
-Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second,
-no question.
+Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second -
+no contest.
