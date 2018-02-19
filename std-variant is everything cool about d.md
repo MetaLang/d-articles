@@ -12,7 +12,7 @@ Kline's article, I wanted to see just what was so bad about `std::visit`, and ge
 measures up.
 
 My intuition going in was that the author was exaggerating for the sake of an interesting article. After all, while
-the ergonomic of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious
+the ergonomics of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious
 that the code could be much worse than if `std::visit` were implemented in D.
 
 For the record, my intuition was completely and utterly wrong.
