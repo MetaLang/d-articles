@@ -133,7 +133,7 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 But this is still ugly, and it is still very complicated to write and understand. There's a lot of moving parts here.
 The fact that someone implementing `make_visitor` has to jump through such ridiculous hoops for something so simple is
-just... ridiculous. As Mr. Kline so eloquently puts it: _"The rigmarole needed for std::visit is entirely insane."_
+just... ridiculous. As Mr. Kline so eloquently puts it: _"The rigmarole needed for `std::visit` is entirely insane."_
 
 We can do better in D:
 
