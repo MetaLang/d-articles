@@ -21,7 +21,7 @@ For the record, my intuition was completely and utterly wrong.
 
 Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant)
 type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of 
-any type. This is akin to C++'s `std::any` as opposed to `std::variant`, with the unfortunate coincidence that C++ used the same
+any type. This is akin to C++'s `std::any` as opposed to `std::variant`, with the unfortunate coincidence that C++ used that same
 name for its implementation of a sum type instead. The `Variant` type is used as follows:
 
 ```D
