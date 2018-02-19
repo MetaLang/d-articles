@@ -57,10 +57,10 @@ alias Null = typeof(null); //for convenience
 alias Option(T) = Algebraic!(T, Null);
 
 Option!size_t indexOf(int[] haystack, int needle) {
-	foreach (size_t i, int n; haystack)
-		if (n == needle)
-			return Option!size_t(i);
-	return Option!size_t(null);
+    foreach (size_t i, int n; haystack)
+        if (n == needle)
+            return Option!size_t(i);
+    return Option!size_t(null);
 }
 
 int[] a = [4, 2, 210, 42, 7];
@@ -137,21 +137,21 @@ We can do better in D:
 ```D
 struct variant_visitor(Fs...)
 {
-	Fs fs;
-	this(Fs fs) { this.fs = fs; }
-    
-	import std.traits;
-	//Generate a different overload of opCall for each Fs
-	static foreach(i, Fun; Fs)
-		ReturnType!Fun opCall(Parameters!Fun params)
-		{
-			return fs[i](params);
-		}
+    Fs fs;
+    this(Fs fs) { this.fs = fs; }
+
+    import std.traits;
+    //Generate a different overload of opCall for each Fs
+    static foreach(i, Fun; Fs)
+        ReturnType!Fun opCall(Parameters!Fun params)
+        {
+            return fs[i](params);
+        }
 }
 
 auto make_visitor(Fs...)(Fs fs)
 {
-	return variant_visitor!Fs(fs);
+    return variant_visitor!Fs(fs);
 }
 ```
 
@@ -161,9 +161,9 @@ implementation to work:
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
 auto visitor = make_visitor!(
-	(string s) => writeln("string: ", s),
-	(int    n) => writeln("int: ", n),
-	(bool   b) => writeln("bool: ", b),
+    (string s) => writeln("string: ", s),
+    (int    n) => writeln("int: ", n),
+    (bool   b) => writeln("bool: ", b),
 );
 v.visit(visitor);
 ```
@@ -177,9 +177,9 @@ unpacking tuples and wrangling arguments; just pure, simple, straightforward cod
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
 v.visit!(
-	(string s) => writeln("string: ", s),
-	(int    n) => writeln("int: ", n),
-	(bool   b) => writeln("bool: ", b),
+    (string s) => writeln("string: ", s),
+    (int    n) => writeln("int: ", n),
+    (bool   b) => writeln("bool: ", b),
 );
 ```
 
@@ -217,9 +217,9 @@ vs.
 
 ```D
 v.visit!((arg) {
-	alias T = typeof(arg);
+    alias T = typeof(arg);
 
-	static if (is(T == string)) {
+    static if (is(T == string)) {
         writeln("string: ", arg);
     }
     else static if (is(T == int)) {
