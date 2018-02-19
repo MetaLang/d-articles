@@ -52,7 +52,7 @@ example is the tuple, called a "product type". In actuality, `Algebraic` is not 
 former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain.
 This effectively gives us an in-library sum type for free! Pretty darn cool. It's used like this:
 
-```
+```D
 alias Null = typeof(null); //for convenience
 alias Option(T) = Algebraic!(T, Null);
 
