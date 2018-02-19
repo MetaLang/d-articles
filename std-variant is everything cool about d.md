@@ -142,15 +142,10 @@ struct variant_visitor(Fs...)
 {
     Fs fs;
     this(Fs fs) { this.fs = fs; }
-
+    
     import std.traits;
-
-    //Generate a different overload of opCall for each Fs
-    static foreach(i, Fun; Fs)
-    ReturnType!Fun opCall(Parameters!Fun params)
-    {
-        return fs[i](params);
-    }
+    static foreach(i, Fun; Fs) //Generate a different overload of opCall for each Fs
+        ReturnType!Fun opCall(Parameters!Fun params) { return fs[i](params); }
 }
 
 auto make_visitor(Fs...)(Fs fs)
