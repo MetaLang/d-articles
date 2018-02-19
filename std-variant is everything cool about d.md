@@ -1,7 +1,7 @@
 # std.variant Is Everything Cool About D
 
 I recently read a great article by [Matt Kline](https://bitbashing.io/about.html) on how [std.visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). Being quite
-out of practice with C++ (I have long since left for the grenner pastures of D), I was curious as to how things had changed
+out of practice with C++ (I have long since left for the greener pastures of D), I was curious as to how things had changed
 in my absence with all the new features added in the past couple of major revisions to the language.
 
 Despite my relative unfamiliarity with post-2003 C++, I had heard about the addition of a library-based sum type in
