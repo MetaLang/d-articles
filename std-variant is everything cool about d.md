@@ -48,9 +48,9 @@ b /= 2; //Error: no possible match found for Variant / int
 
 `std.variant` provides a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
 [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another
-example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`. The
-former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain,
-effectively giving us an in library sum type for free. Pretty darn cool. It's used like this:
+example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`; the
+former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain.
+This effectively gives us an in-library sum type for free. Pretty darn cool. It's used like this:
 
 ```
 alias Null = typeof(null); //for convenience
