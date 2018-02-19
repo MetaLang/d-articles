@@ -36,15 +36,17 @@ assert(a == 43);
 
 float f = a.get!float; //Coerce a to float
 assert(f == 43);
+a /= 2;
+f /= 2;
+assert(a == 21 && f == 21.5);
 
 a = "D rocks!";
 assert(a.type == typeid(string));
 
 Variant b = new Object();
-variant c = b;
+Variant c = b;
 assert(c is b); //c and b point to the same object
 b /= 2; //Error: no possible match found for Variant / int
-
 ```
 
 `std.variant` provides a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
