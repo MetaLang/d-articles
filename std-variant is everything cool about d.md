@@ -49,7 +49,7 @@ assert(c is b); //c and b point to the same object
 b /= 2; //Error: no possible match found for Variant / int
 ```
 
-`std.variant` provides a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
+That said, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
 [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another
 example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`; the
 former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain.
@@ -91,7 +91,7 @@ D greatly improves on it using its powerful toolbox of compile-time, introspecti
 ## Problems with std::visit and how D fixes them
 
 The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane
-and convoluted, and there are almost no static introspection tools included out of the box, except for the absolute
+and convoluted, and there are almost no static introspection tools included out of the box, save for the absolute
 basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose).
 This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to the
 consumer of the library; my eyes bled at this code from Mr. Kline's article:
