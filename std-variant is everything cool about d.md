@@ -85,16 +85,15 @@ Swift, Haskell, Rust, etc. It is a thin wrapper over `Variant` that restricts wh
 specified list.
 
 With that out of the way, let's now talk about what's wrong with C++'s implementation of `std::visit`, and how 
-D greatly improves on it using its powerful toolbox of compile-time, introspective features.
+D makes it much more pleasant to use by leveraging its powerful toolbox of compile-time introspection features.
 
 
 ## Problems with std::visit and how D fixes them
 
 The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane
-and convoluted, and there are almost no static introspection tools included out of the box, save for the absolute
-basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose).
-This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to the
-consumer of the library; my eyes bled at this code from Mr. Kline's article:
+and convoluted, and there are almost no static introspection tools included out of the box. You get the absolute
+basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose),
+but that's it. This makes implementing and using `std::visit` much more difficult than it has to be, and also pushes that complexity down to the consumer of the library; my eyes bled at this code from Mr. Kline's article:
 
 ```C++
 template <class... Fs>
@@ -131,8 +130,23 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 ```
 
-But this is still ugly, and it is still very complicated to write and understand. There's a lot of moving parts here.
-The fact that someone implementing `make_visitor` has to jump through such ridiculous hoops for something so simple is
+But this is still ugly, and it is still very complicated to write and understand. There's a lot of moving parts here,
+and on top of that, user code is also uglified. This is an example from cppreference.com:
+
+```C++
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+for (auto& v: vec) {
+    std::visit(overloaded {
+        [](auto arg) { std::cout << arg << ' '; },
+        [](double arg) { std::cout << std::fixed << arg << ' '; },
+        [](const std::string& arg) { std::cout << std::quoted(arg) << ' '; },
+    }, v);
+}
+```
+
+The fact that someone using `std::visit` has to jump through such ridiculous hoops for something that _should be_ simple is
 just... ridiculous. As Mr. Kline so eloquently puts it: _"The rigmarole needed for `std::visit` is entirely insane."_
 
 We can do better in D:
