@@ -74,18 +74,25 @@ Option!size_t index2 = a.indexOf(117);
 assert(index2.peek!Null);
 ```
 
+In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows
+the user to supply a visitor for each type that may be held, which will be executed _if_ the `Algebraic` holds
+data of that type during runtime. A little more on that later.
+
 
 ## To recap:
 
-- `std.variant.Variant` is the equivalent of `std::any::any`. It is a type-safe container that can contain a value of 
+- `std.variant.Variant` is the equivalent of `std::any`. It is a type-safe container that can contain a value of 
 any type.
 
-- `std.variant.Algebraic` is the equivalent of `std::variant::variant` and is a sum type similar to what you'd find in 
+- `std.variant.Algebraic` is the equivalent of `std::variant` and is a sum type similar to what you'd find in 
 Swift, Haskell, Rust, etc. It is a thin wrapper over `Variant` that restricts what types it may contain to a comile-time
 specified list.
 
-With that out of the way, let's now talk about what's wrong with C++'s implementation of `std::visit`, and how 
-D makes it much more pleasant to use by leveraging its powerful toolbox of compile-time introspection features.
+- `std.variant` provides a `visit` function akin to `std::variant::visit` which dispatches based on the contained type.
+
+With that out of the way, let's now talk about what's wrong with `std::visit` in C++, and how 
+D makes `std.variant.visit` much more pleasant to use by leveraging its powerful toolbox of compile-time introspection 
+and code generation features.
 
 
 ## Problems with std::visit and how D fixes them
