@@ -72,7 +72,7 @@ assert(index2.peek!Null);
 
 The `peek` function takes a `Variant` as a runtime argument, and a type `T` as a compile-time argument. It returns a pointer to `T` that points to the `Variant`'s contained value _iff_ the `Variant` contains a value of type `T`; otherwise, the pointer is `null`.
 
-<sub>_**Note:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`._<sub>
+<sup>_**Note:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`._<sup>
 
 In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows the user to supply a visitor for each type that may be held, which will be executed _if_ the `Algebraic` holds data of that type during runtime. A little more on that later.
 
