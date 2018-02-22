@@ -70,7 +70,7 @@ Option!size_t index2 = a.indexOf(117);
 assert(index2.peek!Null);
 ```
 
-The `peek` function takes a `Variant` as a runtime argument, and a type T as a compile-time argument. It returns a pointer to `T` (otherwise known as `T*`); if the `Variant` contains a value of type `T`, then this points to that value. Otherwise, that pointer is `null`.
+The `peek` function takes a `Variant` as a runtime argument, and a type `T` as a compile-time argument. It returns a pointer to `T` that points to the `Variant`'s contained value _iff_ the `Variant` contains a value of type `T`; otherwise, the pointer is `null`.
 
 <sub>_**Note:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`._<sub>
 
