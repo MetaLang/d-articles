@@ -149,7 +149,10 @@ just... ridiculous. As Mr. Kline so eloquently puts it:
 
 > "The rigmarole needed for `std::visit` is entirely insane."
 
-We can do better in D:
+We can do better in D.
+
+
+## make_visitor Managed
 
 ```D
 struct variant_visitor(Fs...)
