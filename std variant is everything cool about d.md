@@ -46,7 +46,9 @@ assert(c is b); //c and b point to the same object
 b /= 2; //Error: no possible match found for Variant / int
 ```
 
-That said, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another example is the tuple, which is a "product type". In actuality, `Algebraic` is not a separate type from `Variant`; the former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of types. The values which an `Algebraic` may take on are limited to those whose type has been specified. For example, an `Algebraic!(int, string)` can contain either an `int` or a `string`, but if you try to assign a `string` value to an `Algebraic!(float, bool)`, you'll get an error at compile time. The result is that we effectively get an in-library sum type for free! Pretty darn cool. It's used like this:
+That said, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another example is the tuple, which is a "product type". 
+
+In actuality, `Algebraic` is not a separate type from `Variant`; the former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of types. The values which an `Algebraic` may take on are limited to those whose type has been specified. For example, an `Algebraic!(int, string)` can contain either an `int` or a `string`, but if you try to assign a `string` value to an `Algebraic!(float, bool)`, you'll get an error at compile time. The result is that we effectively get an in-library sum type for free! Pretty darn cool. It's used like this:
 
 ```D
 alias Null = typeof(null); //for convenience
@@ -82,15 +84,11 @@ data of that type during runtime. A little more on that later.
 - `std.variant.Variant` is the equivalent of `std::any`. It is a type-safe container that can contain a value of 
 any type.
 
-- `std.variant.Algebraic` is the equivalent of `std::variant` and is a sum type similar to what you'd find in 
-Swift, Haskell, Rust, etc. It is a thin wrapper over `Variant` that restricts what types it may contain to a comile-time
-specified list.
+- `std.variant.Algebraic` is the equivalent of `std::variant` and is a sum type similar to what you'd find in Swift, Haskell, Rust, etc. It is a thin wrapper over `Variant` that restricts what type of values it may contain via a compile-time specified list.
 
 - `std.variant` provides a `visit` function akin to `std::variant::visit` which dispatches based on the contained type.
 
-With that out of the way, let's now talk about what's wrong with `std::visit` in C++, and how 
-D makes `std.variant.visit` much more pleasant to use by leveraging its powerful toolbox of compile-time introspection 
-and code generation features.
+With that out of the way, let's now talk about what's wrong with `std::visit` in C++, and how D makes `std.variant.visit` much more pleasant to use by leveraging its powerful toolbox of compile-time introspection and code generation features.
 
 
 ## Problems with std::visit and how D fixes them
