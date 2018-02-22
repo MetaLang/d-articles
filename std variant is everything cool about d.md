@@ -149,7 +149,6 @@ just... ridiculous. As Mr. Kline so eloquently puts it:
 
 > "The rigmarole needed for `std::visit` is entirely insane."
 
-
 We can do better in D:
 
 ```D
@@ -160,7 +159,7 @@ struct variant_visitor(Fs...)
     
     import std.traits;
     static foreach(i, Fun; Fs) //Generate a different overload of opCall for each Fs
-        ReturnType!Fun opCall(Parameters!Fun params) { return fs[i](params); }
+        auto opCall(Parameters!Fun params) { return fs[i](params); }
 }
 
 auto make_visitor(Fs...)(Fs fs)
