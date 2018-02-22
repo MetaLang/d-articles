@@ -20,7 +20,7 @@ For the record, my intuition was completely and utterly wrong.
 
 ## Exploring std.variant
 
-Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`, which makes it very unfortunate that C++ chose to use the name `variant` for its implementation of a sum type instead. C'est la vie. The type is used as follows:
+Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`, which makes it very unfortunate that C++ chose to use the name `variant` for its implementation of a sum type instead. _C'est la vie._ The type is used as follows:
 
 ```D
 import std.variant;
@@ -70,13 +70,11 @@ Option!size_t index2 = a.indexOf(117);
 assert(index2.peek!Null);
 ```
 
-The `peek` function takes a `Variant` as a runtime argument, and a type T as a compile-time argument. It returns a pointer to T (T*); if the `Variant` contains a value of type T, then the returned pointer points to that value. Otherwise, that pointer is `null`. 
+The `peek` function takes a `Variant` as a runtime argument, and a type T as a compile-time argument. It returns a pointer to T (T*); if the `Variant` contains a value of type T, then the returned pointer points to that value. Otherwise, that pointer is `null`.
 
-_**Note:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`._
+<sub>_**Note:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`._<sub>
 
-In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows
-the user to supply a visitor for each type that may be held, which will be executed _if_ the `Algebraic` holds
-data of that type during runtime. A little more on that later.
+In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows the user to supply a visitor for each type that may be held, which will be executed _if_ the `Algebraic` holds data of that type during runtime. A little more on that later.
 
 
 ## To recap:
@@ -93,10 +91,7 @@ With that out of the way, let's now talk about what's wrong with `std::visit` in
 
 ## Problems with std::visit and how D fixes them
 
-The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane
-and convoluted, and there are almost no static introspection tools included out of the box. You get the absolute
-basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose),
-but that's it. This makes implementing and using `std::visit` much more difficult than it has to be, and also pushes that complexity down to the consumer of the library; my eyes bled at this code from Mr. Kline's article:
+The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are almost no static introspection tools included out of the box. You get the absolute basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose), but that's it. This makes implementing and using `std::visit` much more difficult than it has to be, and also pushes that complexity down to the consumer of the library; my eyes bled at this code from Mr. Kline's article:
 
 ```C++
 template <class... Fs>
