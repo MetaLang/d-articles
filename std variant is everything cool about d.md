@@ -20,10 +20,7 @@ For the record, my intuition was completely and utterly wrong.
 
 ## Exploring std.variant
 
-Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant)
-type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of 
-any type. This is akin to C++'s `std::any` as opposed to `std::variant`, with the unfortunate coincidence that C++ used that same
-name for its implementation of a sum type instead. The `Variant` type is used as follows:
+Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`, which makes it very unfortunate that C++ chose to use the name `variant` for its implementation of a sum type instead. C'est la vie. The type is used as follows:
 
 ```D
 import std.variant;
@@ -49,11 +46,7 @@ assert(c is b); //c and b point to the same object
 b /= 2; //Error: no possible match found for Variant / int
 ```
 
-That said, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to 
-[algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another
-example is the tuple, called a "product type". In actuality, `Algebraic` is not a separate type from `Variant`; the
-former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of which types it may contain.
-This effectively gives us an in-library sum type for free! Pretty darn cool. It's used like this:
+That said, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another example is the tuple, which is a "product type". In actuality, `Algebraic` is not a separate type from `Variant`; the former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of types. The values which an `Algebraic` may take on are limited to those whose type has been specified. For example, an `Algebraic!(int, string)` can contain either an `int` or a `string`, but if you try to assign a `string` value to an `Algebraic!(float, bool)`, you'll get an error at compile time. The result is that we effectively get an in-library sum type for free! Pretty darn cool. It's used like this:
 
 ```D
 alias Null = typeof(null); //for convenience
@@ -68,11 +61,16 @@ Option!size_t indexOf(int[] haystack, int needle) {
 
 int[] a = [4, 2, 210, 42, 7];
 Option!size_t index = a.indexOf(42); //call indexOf like a method using UFCS
-assert(!index.peek!Null && index == size_t(3));
+assert(!index.peek!Null); //assert that `index` does not contain null
+assert(index == size_t(3));
 
 Option!size_t index2 = a.indexOf(117);
 assert(index2.peek!Null);
 ```
+
+The `peek` function takes a `Variant` as a runtime argument, and a type T as a compile-time argument. It returns a pointer to T (T*); if the `Variant` contains a value of type T, then the returned pointer points to that value. Otherwise, that pointer is `null`. 
+
+**NOTE:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`. 
 
 In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows
 the user to supply a visitor for each type that may be held, which will be executed _if_ the `Algebraic` holds
