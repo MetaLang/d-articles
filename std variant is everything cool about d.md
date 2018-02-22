@@ -84,7 +84,7 @@ any type.
 
 - `std.variant.Algebraic` is the equivalent of `std::variant` and is a sum type similar to what you'd find in Swift, Haskell, Rust, etc. It is a thin wrapper over `Variant` that restricts what type of values it may contain via a compile-time specified list.
 
-- `std.variant` provides a `visit` function akin to `std::variant::visit` which dispatches based on the contained type.
+- `std.variant` provides a `visit` function akin to `std::visit` which dispatches based on the contained type.
 
 With that out of the way, let's now talk about what's wrong with `std::visit` in C++, and how D makes `std.variant.visit` much more pleasant to use by leveraging its powerful toolbox of compile-time introspection and code generation features.
 
