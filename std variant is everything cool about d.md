@@ -7,13 +7,13 @@ in my absence with all the new features added in the last few major revisions to
 Despite my relative unfamiliarity with post-2003 C++, I had heard about the addition of a library-based sum type in
 C++17. My curiosity was mildly piqued by the news, but like many new additions to C++ in the past decade, it's something
 D has had [for years](https://github.com/dlang/phobos/blob/eec6be69edec9601f9f856afcd25a797e845c181/std/variant.d). 
-Given the oft-repeated criticism that C++ is a convoluted, complex mess, and the seemingly sensational title of Mr. 
-Kline's article, I wanted to see just what was so bad about `std::visit`, and get a feel for how well D's equivalent 
-measures up.
+Given the seemingly sensational title of Mr. Kline's article, I wanted to see just what was so bad about `std::visit`,
+and get a feel for how well D's equivalent measures up.
 
-My intuition going in was that the author was exaggerating for the sake of an interesting article. After all, while
-the ergonomics of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious
-that the code could be much worse than if `std::visit` were implemented in D.
+My intuition going in was that the author was exaggerating for the sake of an interesting article. We've all heard the
+oft-repeated criticism that C++ is a complex, ugly mess (even some of its biggest proponents [think so](https://www.youtube.com/watch?v=KAWA1DuvCnQ)), but really, how bad could it be? After all, while the ergonomics of D templates are much improved over C++,
+the underlying mechanics are broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than
+`std.variant.visit`.
 
 For the record, my intuition was completely and utterly wrong.
 
