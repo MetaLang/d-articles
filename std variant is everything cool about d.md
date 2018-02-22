@@ -145,7 +145,7 @@ for (auto& v: vec) {
 ```
 
 The fact that someone using `std::visit` has to jump through such ridiculous hoops for something that _should be_ simple is
-just... ridiculous. As Mr. Kline so eloquently puts it:
+just... ridiculous. As Mr. Kline astutely puts it:
 
 > "The rigmarole needed for `std::visit` is entirely insane."
 
