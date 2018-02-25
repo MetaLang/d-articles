@@ -128,7 +128,9 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 ```
 
-But if you're stuck with C++14 or older, well... you're out of luck. Even then, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). This code is also still very complicated to write and understand, despite being a massive improvement on the previous implementation of `make_visitor`. There's still a lot of moving parts here and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you[1][1].
+But if you're stuck with C++14 or older, well... you're out of luck. Even then, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). This code is also still very complicated to write and understand, despite being a massive improvement on the previous implementation of `make_visitor`. There's still a lot of moving parts here and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you.
+
+<sup>**_Note:_** As a fun exercise, try leaving out an overload for one of the types contained in your variant and marvel at the truly cryptic error message your compiler prints</sup>
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -247,5 +249,3 @@ v.visit!((arg) {
 ```
 
 Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second - no contest.
-
-[1]: As a fun exercise, try leaving out an overload for one of the types contained in your variant and marvel at the truly cryptic error message your compiler prints (I'm using GCC 7.02).
