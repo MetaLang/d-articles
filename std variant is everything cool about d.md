@@ -126,7 +126,7 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 ```
 
-However, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). Despite being a massive improvement on the preceding example, it's complicated to get right the first time, and to understand later on. There's still a lot of moving parts and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you.
+However, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). Despite being a massive improvement on the preceding example, it's hard to get right when writing it, and hard to understand when reading it. There's still a lot of moving parts and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you.
 
 <sup>**_Note:_** As a fun exercise, try leaving out an overload for one of the types contained in your `variant` and marvel at the truly cryptic error message your compiler prints.</sup>
 
