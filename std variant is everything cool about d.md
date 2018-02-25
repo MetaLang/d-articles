@@ -150,7 +150,7 @@ for (auto& v: vec) {
 
 Why is this extra work forced on us by C++, just to make use of `std::visit`? Users of `std::visit` are stock between a rock and a hard place: either write some truly stigmata-inducing code to generate a struct with the necessary overloads, or bite the bullet and write a new struct every time you want to use `std::visit`. Neither is very appealing, and both are a one-way ticket to Boilerplate Hell. The fact that you have to jump through such ridiculous hoops and write some ugly-looking boilerplate for something that _should be_ very simple is just... ridiculous. As Mr. Kline astutely puts it:
 
-                        > The rigmarole needed for `std::visit` is entirely insane.
+> The rigmarole needed for `std::visit` is entirely insane.
 
 We can do better in D.
 
