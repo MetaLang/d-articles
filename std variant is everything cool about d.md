@@ -136,6 +136,9 @@ Here's an example from [cppreference.com](http://en.cppreference.com/w/cpp/utili
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
+using var_t = std::variant<int, long, double, std::string>;
+std::vector<var_t> vec = {10, 15l, 1.5, "hello"};
+
 for (auto& v: vec) {
     std::visit(overloaded {
         [](auto arg) { std::cout << arg << ' '; },
