@@ -11,9 +11,7 @@ Given the seemingly sensational title of Mr. Kline's article, I wanted to see ju
 and get a feel for how well D's equivalent measures up.
 
 My intuition going in was that the author was exaggerating for the sake of an interesting article. We've all heard the
-oft-repeated criticism that C++ is a complex, ugly mess (even some of its biggest proponents [think so](https://www.youtube.com/watch?v=KAWA1DuvCnQ)), but really, how bad could it be? After all, while the ergonomics of D templates are much improved over C++,
-the underlying mechanics are broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than
-`std.variant.visit`.
+oft-repeated criticism that C++ is complex and inconsistent (even some of its biggest proponents [think so](https://www.youtube.com/watch?v=KAWA1DuvCnQ)), but really, how bad could it be? After all, while the ergonomics of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than `std.variant.visit`.
 
 For the record, my intuition was completely and utterly wrong.
 
@@ -128,9 +126,11 @@ template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 ```
 
-But if you're stuck with C++14 or older, well... you're out of luck. Even then, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). This code is also still very complicated to write and understand, despite being a massive improvement on the previous implementation of `make_visitor`. There's still a lot of moving parts here and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you.
+However, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). Despite being a massive improvement on the preceding example, it's complicated to get right the first time, and to understand later on. There's still a lot of moving parts and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you.
 
 <sup>**_Note:_** As a fun exercise, try leaving out an overload for one of the types contained in your `variant` and marvel at the truly cryptic error message your compiler prints.</sup>
+
+Here's an example from [cppreference.com](http://en.cppreference.com/w/cpp/utility/variant/visit) which is the _minimal_ amount of work necessary to use `std::visit`:
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -145,10 +145,9 @@ for (auto& v: vec) {
 }
 ```
 
-The fact that someone using `std::visit` has to jump through such ridiculous hoops for something that _should be_ simple is
-just... ridiculous. As Mr. Kline astutely puts it:
+Why is this extra work forced on us by C++, just to make use of `std::visit`? Users of `std::visit` are stock between a rock and a hard place: either write some truly stigmata-inducing code to generate a struct with the necessary overloads, or bite the bullet and write a new struct every time you want to use `std::visit`. Neither is very appealing, and both are a one-way ticket to Boilerplate Hell. The fact that you have to jump through such ridiculous hoops and write some ugly-looking boilerplate for something that _should be_ very simple is just... ridiculous. As Mr. Kline astutely puts it:
 
-> The rigmarole needed for `std::visit` is entirely insane.
+                        > The rigmarole needed for `std::visit` is entirely insane.
 
 We can do better in D.
 
