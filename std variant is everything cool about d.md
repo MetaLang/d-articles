@@ -174,7 +174,7 @@ auto make_visitor(Fs...)(Fs fs)
 }
 ```
 
-And... that's it. We're done. No pain, no strain, and easy, understandable code. We can then put our much-simplified
+And... that's it. We're done. No pain, no strain, and easy, understandable, _procedural_ code. We can then put our much-simplified
 implementation to work:
 
 ```D
