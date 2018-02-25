@@ -207,7 +207,7 @@ in many up-and-coming languages, but implemented completely _in user code_. That
 
 If you'll indulge me for a moment, I'd like to argue with a strawman C++ programmer of my own creation so I can make a point.
 
-> But you're cheating! You can just use the new `if constexpr` to simplify the code and cut out `make_visitor`
+> But you're cheating! You can use the new `if constexpr` to simplify the code and cut out `make_visitor`
 entirely, just like in your D example!
 
 Yes, you _could_ use `if constexpr`, and Mr. Kline points this out in his article. However, there are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is still uglier and more complicated than just passing functions to `visit` directly. Three, the D version would _still_ blow C++ out of the water on readability. Consider:
