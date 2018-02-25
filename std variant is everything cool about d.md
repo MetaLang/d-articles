@@ -91,7 +91,7 @@ With that out of the way, let's now talk about what's wrong with `std::visit` in
 
 ## Problems with std::visit and how D fixes them
 
-The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are almost no static introspection tools included out of the box. You get the absolute basics in `std::type_traits` (there are a few third-party solutions, which are appropriately horrifying and verbose), but that's it. This makes implementing and using `std::visit` much more difficult than it has to be, and also pushes that complexity down to the consumer of the library; my eyes bled at this code from Mr. Kline's article:
+The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are almost no static introspection tools included out of the box. You get the absolute basics in `std::type_traits`, but that's it (there are a few third-party solutions, which are appropriately horrifying and verbose). This makes implementing and using `std::visit` much more difficult than it has to be, and also pushes that complexity down to the consumer of the library. My eyes bled at this code from Mr. Kline's article:
 
 ```C++
 template <class... Fs>
@@ -121,15 +121,14 @@ auto make_visitor(Fs... fs)
 }
 ```
 
-Now as he points out, this can be simplified down to the following in C++17:
+Now, as he points out, this can be simplified down to the following in C++17:
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 ```
 
-But this is still ugly, and it is still very complicated to write and understand. There's a lot of moving parts here,
-and on top of that, user code is also uglified. This is an example from cppreference.com:
+But if you're stuck with C++14 or older, well... you're out of luck. Even then, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). This code is also still very complicated to write and understand, despite being a massive improvement on the previous implementation of `make_visitor`. There's still a lot of moving parts here and a lot of complicated template expansion and code generation going on behind the scenes, and if you screw something up you'd better believe that the compiler is going to spit some very perplexing errors back at you<sup>[1][1]</sup>.
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -247,5 +246,6 @@ v.visit!((arg) {
 });
 ```
 
-Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second -
-no contest.
+Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second - no contest.
+
+[1]: As a fun exercise, try leaving out an overload for one of the types contained in your variant and marvel at the truly cryptic error message your compiler prints (I'm using GCC 7.02).
