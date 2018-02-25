@@ -130,7 +130,7 @@ However, this code is still quite ugly (though I suspect I could get used to the
 
 <sup>**_Note:_** As a fun exercise, try leaving out an overload for one of the types contained in your `variant` and marvel at the truly cryptic error message your compiler prints.</sup>
 
-Here's an example from [cppreference.com](http://en.cppreference.com/w/cpp/utility/variant/visit) which is the _minimal_ amount of work necessary to use `std::visit`:
+Here's an example from [cppreference.com](http://en.cppreference.com/w/cpp/utility/variant/visit) showcasing the _minimal_ amount of work necessary to use `std::visit`:
 
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
