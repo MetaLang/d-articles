@@ -89,7 +89,7 @@ With that out of the way, let's now talk about what's wrong with `std::visit` in
 
 ## Problems with std::visit and how D fixes them
 
-The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are very few static introspection tools included out of the box. You get the absolute basics in `std::type_traits`, but that's it (there are a couple third-party solutions, which are appropriately horrifying and verbose). This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to consumers of the library, which makes _using_ it that much more difficult as well. My eyes bled at this code from Mr. Kline's article:
+The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are very few static introspection tools included out of the box. You get the absolute basics in `std::type_traits`, but that's it (there are a couple third-party solutions, which are appropriately horrifying and verbose). This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to consumers of the library, which makes _using_ it that much more difficult as well. My eyes bled at this code from Mr. Kline's article which generates a visitor struct from the provided lambda functions:
 
 ```C++
 template <class... Fs>
