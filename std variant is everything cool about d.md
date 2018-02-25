@@ -201,7 +201,7 @@ And in a puff of efficiency, we've completely obviated all this machinery that C
 simplified our users' lives. As a bonus, this looks very similar to the built-in pattern matching syntax that you find
 in many up-and-coming languages, but implemented completely _in user code_. That's very powerful.
 
-<sup>_**Note:** Unlike the C++ version, the error message you get when you accidentally leave out a function to handle one of the types is atronomically better. [Check it out for yourself](https://run.dlang.io/is/ROA9Ac)._</sup>
+<sup>_**Note:** Unlike the C++ version, the error message you get when you accidentally leave out a function to handle one of the types is astronomically better. [Check it out for yourself](https://run.dlang.io/is/ROA9Ac)._</sup>
 
 ## Other considerations
 
