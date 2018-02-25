@@ -63,7 +63,7 @@ Option!size_t indexOf(int[] haystack, int needle) {
 
 int[] a = [4, 2, 210, 42, 7];
 Option!size_t index = a.indexOf(42); //call indexOf like a method using UFCS
-assert(!index.peek!Null); //assert that `index` does not contain null
+assert(!index.peek!Null); //assert that `index` does not contain a value of type Null
 assert(index == size_t(3));
 
 Option!size_t index2 = a.indexOf(117);
