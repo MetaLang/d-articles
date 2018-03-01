@@ -10,7 +10,7 @@ D has had [for years](https://github.com/dlang/phobos/blob/eec6be69edec9601f9f85
 Given the seemingly sensational title of Mr. Kline's article, I wanted to see just what was so bad about `std::visit`,
 and get a feel for how well D's equivalent measures up.
 
-My intuition going in was that the author was exaggerating for the sake of an interesting article. We've all heard the
+My intuition was that the author was exaggerating for the sake of an interesting article. We've all heard the
 oft-repeated criticism that C++ is complex and inconsistent (even some of its biggest proponents [think so](https://www.youtube.com/watch?v=KAWA1DuvCnQ)), but really, how bad could it be? After all, while the ergonomics of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than `std.variant.visit`.
 
 For the record, my intuition was completely and utterly wrong.
