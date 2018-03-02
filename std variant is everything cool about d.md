@@ -1,24 +1,22 @@
 # std.variant Is Everything Cool About D
 
-I recently read a great article by [Matt Kline](https://bitbashing.io/about.html) on how [std::visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). Being quite
-out of practice with C++ (I have long since left for the greener pastures of D), I was curious as to how things had changed
-in my absence with all the new features added in the last few major revisions to the language.
+I recently read a great article by [Matt Kline](https://bitbashing.io/about.html) on how [std::visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). My C++ skills have grown rusty from disuse (I have long since left for the greener pastures of D), but I was curious as to how things had changed in my absence.
 
 Despite my relative unfamiliarity with post-2003 C++, I had heard about the addition of a library-based sum type in
-C++17. My curiosity was mildly piqued by the news, but like many new additions to C++ in the past decade, it's something
+C++17. My curiosity was mildly piqued by the news, although like many new additions to C++ in the past decade, it's something
 D has had [for years](https://github.com/dlang/phobos/blob/eec6be69edec9601f9f856afcd25a797e845c181/std/variant.d). 
 Given the seemingly sensational title of Mr. Kline's article, I wanted to see just what was so bad about `std::visit`,
 and get a feel for how well D's equivalent measures up.
 
 My intuition was that the author was exaggerating for the sake of an interesting article. We've all heard the
-oft-repeated criticism that C++ is complex and inconsistent (even some of its biggest proponents [think so](https://www.youtube.com/watch?v=KAWA1DuvCnQ)), but really, how bad could it be? After all, while the ergonomics of D templates are much improved over C++, the underlying mechanics are broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than `std.variant.visit`.
+oft-repeated criticism that C++ is complex and inconsistent (even some of its [biggest proponents](https://www.youtube.com/watch?v=KAWA1DuvCnQ) think so), but really, how bad could it be? After all, while the ergonomics of templates in D are much improved over C++, the underlying mechanism is broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than `std.variant.visit`.
 
 For the record, my intuition was completely and utterly wrong.
 
 
 ## Exploring std.variant
 
-Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type, which is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`, which makes it very unfortunate that C++ chose to use the name `variant` for its implementation of a sum type instead. _C'est la vie._ The type is used as follows:
+Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type; this is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`; very unfortunate, then, that C++ chose to use the name `variant` for its implementation of a sum type instead. _C'est la vie._ The type is used as follows:
 
 ```D
 import std.variant;
@@ -44,9 +42,9 @@ assert(c is b); //c and b point to the same object
 b /= 2; //Error: no possible match found for Variant / int
 ```
 
-That said, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another example is the tuple, which is a "product type". 
+Luckily, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another example is the tuple, which is a "product type". 
 
-In actuality, `Algebraic` is not a separate type from `Variant`; the former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of types. The values which an `Algebraic` may take on are limited to those whose type has been specified. For example, an `Algebraic!(int, string)` can contain either an `int` or a `string`, but if you try to assign a `string` value to an `Algebraic!(float, bool)`, you'll get an error at compile time. The result is that we effectively get an in-library sum type for free! Pretty darn cool. It's used like this:
+In actuality, `Algebraic` is not a separate type from `Variant`; the former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of types. The values which an `Algebraic` may take on are limited to those whose type is in that list. For example, an `Algebraic!(int, string)` can contain a value of type `int` or `string`, but if you try to assign a `string` value to an `Algebraic!(float, bool)`, you'll get an error at compile time. The result is that we effectively get an in-library sum type for free! Pretty darn cool. It's used like this:
 
 ```D
 alias Null = typeof(null); //for convenience
