@@ -203,7 +203,7 @@ So `visit` only accepts a `delegate` or `function`, and figures out which one to
 
 Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `std.variant.visit` may give the user fewer options, but _unlike_ `std::visit`, it does not require them to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor`. 
 
-This also highlights the difference between the two languages themselves. Sometimes D may give the user fewer options (although you're rarely, if ever, stuck needing that _one_ C++ feature that D doesn't have), but it is in service of making their lives easier through faster, safer code that is often an order of magnitude faster to iterate on (D's motto is _Fast code, fast_ for a reason). With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
+This also highlights the difference between the two languages themselves. D may sometimes give the user fewer options (although you're rarely, if ever, stuck needing that _one_ C++ feature that D doesn't have), but it is in service of making their lives easier through faster, safer code that is often an order of magnitude faster to iterate on (D's motto is _Fast code, fast_ for a reason). With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
 
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
