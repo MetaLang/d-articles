@@ -85,7 +85,7 @@ any type.
 With that out of the way, let's now talk about what's wrong with `std::visit` in C++, and how D makes `std.variant.visit` much more pleasant to use by leveraging its powerful toolbox of compile-time introspection and code generation features.
 
 
-## Problems with std::visit and how D fixes them
+## The problem with std::visit
 
 The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are very few static introspection tools included out of the box. You get the absolute basics in `std::type_traits`, but that's it (there are a couple third-party solutions, which are appropriately horrifying and verbose). This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to consumers of the library, which makes _using_ it that much more difficult as well. My eyes bled at this code from Mr. Kline's article which generates a visitor struct from the provided lambda functions:
 
@@ -122,9 +122,25 @@ Now, as he points out, this can be simplified down to the following in C++17:
 ```C++
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+template <class... Fs>
+auto make_visitor(Fs... fs)
+{
+    return overload<Fs...>(fs...);
+}
 ```
 
-However, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). Despite being a massive improvement on the preceding example, it's hard to get right when writing it, and hard to understand when reading it. There's still a lot of complicated template expansion and code generation going on, but it's been hidden behind the scenes. And boy oh boy, if you screw something up you'd better _believe_ that the compiler is going to spit some supremely perplexing errors back at you.
+However, this code is still quite ugly (though I suspect I could get used to the elipses syntax eventually). Despite being a massive improvement on the preceding example, it's hard to get right when writing it, and hard to understand when reading it. To write (and more importantly, _read_) code like this, you have to know about:
+
+- Templates
+- Template argument packs
+- [SFINAE](http://en.cppreference.com/w/cpp/language/sfinae)
+- [User-defined deduction guides](http://en.cppreference.com/w/cpp/language/class_template_argument_deduction)
+- The spread operator (...)
+- Operator overloading
+- C++-specific metaprogramming techniques
+
+There's a lot of complicated template expansion and code generation going on, but it's hidden behind the scenes. And boy oh boy, if you screw something up you'd better _believe_ that the compiler is going to spit some supremely perplexing errors back at you.
 
 <sup>_**Note:** As a fun exercise, try leaving out an overload for one of the types contained in your `variant` and marvel at the truly cryptic error message your compiler prints._</sup>
 
@@ -153,7 +169,7 @@ Why is this extra work forced on us by C++, just to make use of `std::visit`? Us
 We can do better in D.
 
 
-## make_visitor Managed
+## The D solution
 
 ```D
 struct variant_visitor(Fs...)
@@ -172,19 +188,20 @@ auto make_visitor(Fs...)(Fs fs)
 }
 ```
 
-And... that's it. We're done. No pain, no strain, no bleeding from the eyes. We can then put our much-simplified implementation to work:
+And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It is a few more lines than the C++ version, granted, but in my opinion, this is much simpler than the C++ version. To write and/or read this code, you have to understand a demonstrably smaller number of concepts, each of which is less complicated than the C++ equivalent (if applicable):
 
-```D
-Algebraic!(string, int, bool) v = "D rocks!";
-auto visitor = make_visitor(
-    (string s) => writeln("string: ", s),
-    (int    n) => writeln("int: ", n),
-    (bool   b) => writeln("bool: ", b),
-);
-v.visit(visitor); 
-```
+- Templates
+- Template argument packs
+- [static foreach](https://github.com/dlang/DIPs/blob/master/DIPs/accepted/DIP1010.md)
+- Operator overloading
 
-And now I have to apologize, because I've been leading you down the garden path this whole time. This code I've just shown you won't compile. Why? Because `std.variant.visit` does not accept a callable struct, unlike its C++ counterpart. Sorry to mislead you, but D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments instead of requiring the user to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor`. With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
+However, a D programmer would not write this code. Why? Because `std.variant.visit` does not take a callable struct. From [the documentation](https://dlang.org/phobos/std_variant.html#.visit):
+
+> Applies a **delegate** or **function** to the given Algebraic depending on the held type, ensuring that all types are handled by the visiting functions. Visiting handlers are passed in the template parameter list. _(emphasis mine)_
+
+So `visit` only accepts a `delegate` or `function`, and figures out which one to pass the contained value to based on the functions' signatures. 
+
+Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `visit` may give the user fewer options, but it _also_ does not require them to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor`. With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
 
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
@@ -197,20 +214,20 @@ v.visit!(
 
 And in a puff of efficiency, we've completely obviated all this machinery that C++ requires for `std::visit`, and greatly
 simplified our users' lives. As a bonus, this looks very similar to the built-in pattern matching syntax that you find
-in many up-and-coming languages, but implemented completely _in user code_. That's very powerful.
+in many up-and-coming languages that take inspiration from their functional forebears, but is implemented completely _in user code_. That's very powerful.
 
 <sup>_**Note:** Unlike the C++ version, the error message you get when you accidentally leave out a function to handle one of the types is comprehendable by mere mortals. [Check it out for yourself](https://run.dlang.io/is/ROA9Ac)._</sup>
 
 ## Other considerations
 
-If you'll indulge me for a moment, I'd like to argue with a strawman C++ programmer of my own creation so I can make a point.
+As my final point - if you'll indulge me for a moment - I'd like to argue with a strawman C++ programmer of my own creation. In his article, Mr. Kline also mentions the new [if constexpr](http://en.cppreference.com/w/cpp/language/if) C++ feature (which of course, D has had for over a decade now). I'd like to forestall arguments from my strawman friend such as:
 
-> But you're cheating! You can use the new `if constexpr` to simplify the code and cut out `make_visitor`
-entirely, just like in your D example!
+> But you're cheating! You can use the new `if constexpr` to simplify the code and cut out `make_visitor` entirely, just like in your D example!
 
-Yes, you _could_ use `if constexpr`, and Mr. Kline points this out in his article. However, there are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly. Three, the D version would _still_ blow C++ out of the water on readability. Consider:
+Yes, you _could_ use `if constexpr`, but you shouldn't (and Mr. Kline explicitly rejects using it in his article).There are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly. Three, the D version would _still_ blow C++ out of the water on readability. Consider:
 
 ```C++
+//C++
 visit([](auto& arg) {
     using T = std::decay_t<decltype(arg)>;
 
@@ -229,6 +246,7 @@ visit([](auto& arg) {
 vs.
 
 ```D
+//D
 v.visit!((arg) {
     alias T = typeof(arg);
 
