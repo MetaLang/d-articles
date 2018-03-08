@@ -201,7 +201,9 @@ However, a D programmer would not write this code. Why? Because `std.variant.vis
 
 So `visit` only accepts a `delegate` or `function`, and figures out which one to pass the contained value to based on the functions' signatures. 
 
-Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `std.variant.visit` may give the user fewer options, but _unlike_ `std::visit`, it does not require them to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor`. With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
+Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `std.variant.visit` may give the user fewer options, but _unlike_ `std::visit`, it does not require them to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor`. 
+
+This also highlights the difference between the two languages themselves. Sometimes D may give the user fewer options (although you're rarely, if ever, stuck needing that _one_ C++ feature that D doesn't have), but it is in service of making their lives easier through faster, safer code that is often an order of magnitude faster to iterate on (D's motto is _Fast code, fast_ for a reason). With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
 
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
@@ -220,7 +222,7 @@ in many up-and-coming languages that take inspiration from their functional fore
 
 ## Other considerations
 
-As my final point - if you'll indulge me for a moment - I'd like to argue with a strawman C++ programmer of my own creation. In his article, Mr. Kline also mentions the new [if constexpr](http://en.cppreference.com/w/cpp/language/if) C++ feature (which of course, D has had for over a decade now). I'd like to forestall arguments from my strawman friend such as:
+As my final point - if you'll indulge me for a moment - I'd like to argue with a strawman C++ programmer of my own creation. In his article, Mr. Kline also mentions the new [if constexpr](http://en.cppreference.com/w/cpp/language/if) feature added in C++17 (which of course, D has had for over a decade now). I'd like to forestall arguments from my strawman friend such as:
 
 > But you're cheating! You can use the new `if constexpr` to simplify the code and cut out `make_visitor` entirely, just like in your D example!
 
