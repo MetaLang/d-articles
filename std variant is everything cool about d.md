@@ -188,7 +188,7 @@ auto make_visitor(Fs...)(Fs fs)
 }
 ```
 
-And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It is a few more lines than the C++ version, granted, but in my opinion, this is much simpler than the C++ version. To write and/or read this code, you have to understand a demonstrably smaller number of concepts, each of which is less complicated than the C++ equivalent (if applicable):
+And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It is a few more lines than the C++ version, granted, but in my opinion, this is much simpler than the C++ version. To write and/or read this code, you have to understand a demonstrably smaller number of concepts:
 
 - Templates
 - Template argument packs
@@ -197,7 +197,7 @@ And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It 
 
 However, a D programmer would not write this code. Why? Because `std.variant.visit` does not take a callable struct. From [the documentation](https://dlang.org/phobos/std_variant.html#.visit):
 
-> Applies a **delegate** or **function** to the given Algebraic depending on the held type, ensuring that all types are handled by the visiting functions. Visiting handlers are passed in the template parameter list. _(emphasis mine)_
+> Applies a **delegate** or **function** to the given Algebraic depending on the held type, ensuring that all types are handled by the visiting functions. Visiting handlers are passed in the template parameter list. **_(emphasis mine)_**
 
 So `visit` only accepts a `delegate` or `function`, and figures out which one to pass the contained value to based on the functions' signatures. 
 
