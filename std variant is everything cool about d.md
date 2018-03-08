@@ -201,7 +201,7 @@ However, a D programmer would not write this code. Why? Because `std.variant.vis
 
 So `visit` only accepts a `delegate` or `function`, and figures out which one to pass the contained value to based on the functions' signatures. 
 
-Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `visit` may give the user fewer options, but it _also_ does not require them to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor`. With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
+Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `std.variant.visit` may give the user fewer options, but it _also_ does not require them to painstakingly create a new struct that overloads `opCall` for each case, or waste time writing something like `make_visitor` like `std::visit`. With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
 
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
