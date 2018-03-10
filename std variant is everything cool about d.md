@@ -193,7 +193,7 @@ auto make_visitor(Fs...)(Fs fs)
 
 
 
-And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It is a few more lines than the C++ version, granted, but in my opinion, this is much simpler than the C++ version. To write and/or read this code, you have to understand a demonstrably smaller number of concepts:
+And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It is a few more lines than the C++ version, granted, but in my opinion, it is also much simpler than the C++ version. To write and/or read this code, you have to understand a demonstrably smaller number of concepts:
 
 - Templates
 - Template argument packs
