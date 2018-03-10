@@ -87,7 +87,7 @@ With that out of the way, let's now talk about what's wrong with `std::visit` in
 
 ## The problem with std::visit
 
-The main problem with the C++ implementation is that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are very few static introspection tools included out of the box. You get the absolute basics in `std::type_traits`, but that's it (there are a couple third-party solutions, which are appropriately horrifying and verbose). This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to consumers of the library, which makes _using_ it that much more difficult as well. My eyes bled at this code from Mr. Kline's article which generates a visitor struct from the provided lambda functions:
+The main problems with the C++ implementation are that - aside from clunkier template syntax - metaprogramming is very arcane and convoluted, and there are very few static introspection tools included out of the box. You get the absolute basics in `std::type_traits`, but that's it (there are a couple third-party solutions, which are appropriately horrifying and verbose). This makes implementing `std::visit` much more difficult than it has to be, and also pushes that complexity down to consumers of the library, which makes _using_ it that much more difficult as well. My eyes bled at this code from Mr. Kline's article which generates a visitor struct from the provided lambda functions:
 
 ```C++
 template <class... Fs>
@@ -161,6 +161,7 @@ for (auto& v: vec) {
     }, v);
 }
 ```
+<sup>_**Note:** I don't show it in this article, but if you want to see this example re-written in D, it's [here](https://run.dlang.io/is/CKnGCk)._</sup>
 
 Why is this extra work forced on us by C++, just to make use of `std::visit`? Users of `std::visit` are stuck between a rock and a hard place: either write some truly stigmata-inducing code to generate a struct with the necessary overloads, or bite the bullet and write a new struct every time you want to use `std::visit`. Neither is very appealing, and both are a one-way ticket to Boilerplate Hell. The fact that you have to jump through such ridiculous hoops and write some ugly-looking boilerplate for something that _should be_ very simple is just... ridiculous. As Mr. Kline astutely puts it:
 
@@ -171,13 +172,15 @@ We can do better in D.
 
 ## The D solution
 
+This is how the typical D programming would implement `make_visitor`, using D's powerful compile-time type introspection tools and code generation abilities:
+
 ```D
 struct variant_visitor(Fs...)
 {
     Fs fs;
     this(Fs fs) { this.fs = fs; }
     
-    import std.traits;
+    import std.traits: Parameters;
     static foreach(i, Fun; Fs) //Generate a different overload of opCall for each Fs
         auto opCall(Parameters!Fun params) { return fs[i](params); }
 }
@@ -187,6 +190,8 @@ auto make_visitor(Fs...)(Fs fs)
     return variant_visitor!Fs(fs);
 }
 ```
+
+
 
 And... that's it. We're done. No pain, no strain, no bleeding from the eyes. It is a few more lines than the C++ version, granted, but in my opinion, this is much simpler than the C++ version. To write and/or read this code, you have to understand a demonstrably smaller number of concepts:
 
