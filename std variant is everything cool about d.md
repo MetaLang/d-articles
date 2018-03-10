@@ -218,10 +218,26 @@ v.visit!(
     (bool   b) => writeln("bool: ", b),
 );
 ```
-<sup>_**Note:** Unlike the C++ version, the error message you get when you accidentally leave out a function to handle one of the types is comprehendable by mere mortals. [Check it out for yourself](https://run.dlang.io/is/ROA9Ac)._</sup>
 
 And in a puff of efficiency, we've completely obviated all this machinery that C++ requires for `std::visit`, and greatly
-simplified our users' lives. As a bonus, this looks very similar to the built-in pattern matching syntax that you find
+simplified our users' lives.
+
+For comparison, the C++ equivalent:
+
+```C++
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+std::variant<std::string, int, bool> v = "C++ rocks?";
+std::visit(overloaded {
+    [](const std::string& s) { std::cout << s << '\n'; },
+    [](int  n) { std::cout << n << '\n'; },
+    [](bool b) { std::cout << b << '\n'; }
+}, v);
+```
+<sup>_**Note:** Unlike the C++ version, the error message you get when you accidentally leave out a function to handle one of the types is comprehendable by mere mortals. [Check it out for yourself](https://run.dlang.io/is/ROA9Ac)._</sup>
+
+As a bonus, our D example looks very similar to the built-in pattern matching syntax that you find
 in many up-and-coming languages that take inspiration from their functional forebears, but is implemented completely _in user code_.
 
 That's powerful.
