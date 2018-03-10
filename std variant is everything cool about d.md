@@ -251,25 +251,6 @@ As my final point - if you'll indulge me for a moment - I'd like to argue with a
 
 Yes, you _could_ use `if constexpr`, but you shouldn't (and Mr. Kline explicitly rejects using it in his article).There are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly. Three, the D version would _still_ blow C++ out of the water on readability. Consider:
 
-```C++
-//C++
-visit([](auto& arg) {
-    using T = std::decay_t<decltype(arg)>;
-
-    if constexpr (std::is_same_v<T, string>) {
-        printf("string: %s\n", arg.c_str());
-    }
-    else if constexpr (std::is_same_v<T, int>) {
-        printf("integer: %d\n", arg);
-    }
-    else if constexpr (std::is_same_v<T, bool>) {
-        printf("bool: %d\n", arg);
-    }
-}, v);
-```
-
-vs.
-
 ```D
 //D
 v.visit!((arg) {
@@ -285,6 +266,25 @@ v.visit!((arg) {
         writeln("bool: ", arg);
     }
 });
+```
+
+vs.
+
+```C++
+//C++
+visit([](auto& arg) {
+    using T = std::decay_t<decltype(arg)>;
+
+    if constexpr (std::is_same_v<T, string>) {
+        printf("string: %s\n", arg.c_str());
+    }
+    else if constexpr (std::is_same_v<T, int>) {
+        printf("integer: %d\n", arg);
+    }
+    else if constexpr (std::is_same_v<T, bool>) {
+        printf("bool: %d\n", arg);
+    }
+}, v);
 ```
 
 Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second - no contest.
