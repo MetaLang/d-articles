@@ -42,7 +42,7 @@ assert(c is b); //c and b point to the same object
 b /= 2; //Error: no possible match found for Variant / int
 ```
 
-Luckily, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a "sum type". Another example is the tuple, which is a "product type". 
+Luckily, `std.variant` _does_ provide a sum type as well: enter [Algebraic](https://dlang.org/phobos/std_variant.html#.Algebraic). The name `Algebraic` refers to [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), of which one kind is a ["sum type"](https://www.quora.com/What-is-a-sum-type). Another example is the tuple, which is a "product type". 
 
 In actuality, `Algebraic` is not a separate type from `Variant`; the former is an [alias](https://dlang.org/spec/declaration.html#alias) for the latter that takes a compile-time specified list of types. The values which an `Algebraic` may take on are limited to those whose type is in that list. For example, an `Algebraic!(int, string)` can contain a value of type `int` or `string`, but if you try to assign a `string` value to an `Algebraic!(float, bool)`, you'll get an error at compile time. The result is that we effectively get an in-library sum type for free! Pretty darn cool. It's used like this:
 
@@ -288,3 +288,4 @@ visit([](auto& arg) {
 ```
 
 Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second - no contest.
+
