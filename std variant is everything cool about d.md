@@ -289,3 +289,6 @@ visit([](auto& arg) {
 
 Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second - no contest.
 
+---------------
+
+If this article has whet your appetite and you want to find out more about D, you can visit the _official_ [Dlang website](https://dlang.org/), and join us on the [mailing list](https://forum.dlang.org/) or #D on IRC. D is a community-driven project, so we're also always looking for people eager to jump in and get their hands dirty - [pull requests welcome!](https://github.com/dlang).
