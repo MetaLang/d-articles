@@ -208,7 +208,7 @@ So `visit` only accepts a `delegate` or `function`, and figures out which one to
 
 Why do this and give the user fewer options? D is what I like to call an anti-boilerplate language. In all things, D prefers the most direct method, and thus, `visit` takes a compile-time specified list of functions as template arguments. `std.variant.visit` may give the user fewer options, but _unlike_ `std::visit`, it does not require them to painstakingly create a new struct that overloads `opCall` for each case, or to waste time writing something like `make_visitor`. 
 
-This also highlights the difference between the two languages themselves. D may sometimes give the user fewer options (although you're rarely, if ever, stuck needing that _one_ C++ feature that D doesn't have), but it is in service of making their lives easier through faster, safer code that is often an order of magnitude faster to iterate on (D's motto is _Fast code, fast_ for a reason). With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
+This also highlights the difference between the two languages themselves. D may sometimes give the user fewer options (don't worry though - D is a systems programming language, so you're never _completely_ without options), but it is in service of making their lives easier. With D, you get faster, safer code, that combines the speed of C++ with the productivity of scripting languages (D's motto is _Fast code, fast_ for a reason). With `std.variant`, there's no messing around defining structs with callable methods or unpacking tuples or wrangling arguments; just straightforward, understandable code:
 
 ```D
 Algebraic!(string, int, bool) v = "D rocks!";
@@ -249,12 +249,12 @@ As my final point - if you'll indulge me for a moment - I'd like to argue with a
 
 > But you're cheating! You can use the new `if constexpr` to simplify the code and cut out `make_visitor` entirely, just like in your D example!
 
-Yes, you _could_ use `if constexpr`, but you shouldn't (and Mr. Kline explicitly rejects using it in his article).There are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly. Three, the D version would _still_ blow C++ out of the water on readability. Consider:
+Yes, you _could_ use `if constexpr`, but you shouldn't (and Mr. Kline explicitly rejects using it in his article).There are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly (at least, it is in D). Three, the D version would _still_ blow C++ out of the water on readability. Consider:
 
 ```D
 //D
 v.visit!((arg) {
-    alias T = typeof(arg);
+    alias T = Unqual!(typeof(arg)); //Remove const, shared, etc.
 
     static if (is(T == string)) {
         writeln("string: ", arg);
@@ -287,7 +287,7 @@ visit([](auto& arg) {
 }, v);
 ```
 
-Which version of the code would _you_ want to have to read, understand, and modify? For me, at least, it's the second - no contest.
+Which version of the code would _you_ want to have to read, understand, and modify? For me, it's the D version - no contest.
 
 ---------------
 
