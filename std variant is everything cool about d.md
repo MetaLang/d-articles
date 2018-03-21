@@ -249,7 +249,7 @@ As my final point - if you'll indulge me for a moment - I'd like to argue with a
 
 > But you're cheating! You can use the new `if constexpr` to simplify the code and cut out `make_visitor` entirely, just like in your D example!
 
-Yes, you _could_ use `if constexpr`, but you shouldn't (and Mr. Kline explicitly rejects using it in his article).There are a few problems with this approach which make it all-around inferior. One, this method is error prone and inflexible in the case where you need to add a new type to your variant. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly (at least, it is in D). Three, the D version would _still_ blow C++ out of the water on readability. Consider:
+Yes, you _could_ use `if constexpr` (and by the same token, `static if` in D), but you shouldn't (and Mr. Kline explicitly rejects using it in his article).There are a few problems with this approach which make it all-around inferior in both C++ and D. One, this method is error prone and inflexible in the case where you need to add a new type to your `variant`/`Algebraic`. Your old code will still compile but will now be _wrong_. Two, doing it this way is uglier and more complicated than just passing functions to `visit` directly (at least, it is in D). Three, the D version would _still_ blow C++ out of the water on readability. Consider:
 
 ```D
 //D
