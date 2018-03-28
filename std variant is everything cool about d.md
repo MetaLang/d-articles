@@ -3,7 +3,7 @@
 I recently read a great article by [Matt Kline](https://bitbashing.io/about.html) on how [std::visit is everything wrong with modern C++](https://bitbashing.io/std-visit.html). My C++ skills have grown rusty from disuse (I have long since left for the greener pastures of D), but I was curious as to how things had changed in my absence.
 
 Despite my relative unfamiliarity with post-2003 C++, I had heard about the addition of a library-based sum type in
-C++17. My curiosity was mildly piqued by the news, although like many new additions to C++ in the past decade (to the language _or_ the standard library), it's something
+`std` for C++17. My curiosity was mildly piqued by the news, although like many new additions to C++ in the past decade, it's something
 D has had [for years](https://github.com/dlang/phobos/blob/eec6be69edec9601f9f856afcd25a797e845c181/std/variant.d). 
 Given the seemingly sensational title of Mr. Kline's article, I wanted to see just what was so bad about `std::visit`,
 and get a feel for how well D's equivalent measures up.
