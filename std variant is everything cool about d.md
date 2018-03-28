@@ -175,19 +175,20 @@ We can do better in D.
 This is how the typical D programming would implement `make_visitor`, using D's powerful compile-time type introspection tools and code generation abilities:
 
 ```D
-struct variant_visitor(Fs...)
+import std.traits: Parameters;
+
+struct variant_visitor(Funs...)
 {
-    Fs fs;
-    this(Fs fs) { this.fs = fs; }
+    Funs fs;
+    this(Funs fs) { this.fs = fs; }
     
-    import std.traits: Parameters;
-    static foreach(i, Fun; Fs) //Generate a different overload of opCall for each Fs
+    static foreach(i, Fun; Funs) //Generate a different overload of opCall for each Fs
         auto opCall(Parameters!Fun params) { return fs[i](params); }
 }
 
-auto make_visitor(Fs...)(Fs fs)
+auto make_visitor(Funs...)(Funs fs)
 {
-    return variant_visitor!Fs(fs);
+    return variant_visitor!Funs(fs);
 }
 ```
 
