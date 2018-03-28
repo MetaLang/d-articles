@@ -9,7 +9,7 @@ Given the seemingly sensational title of Mr. Kline's article, I wanted to see ju
 and to get a feel for how well D's equivalent measures up.
 
 My intuition was that the author was exaggerating for the sake of an interesting article. We've all heard the
-oft-repeated criticism that C++ is complex and inconsistent (even some of its [biggest proponents](https://www.youtube.com/watch?v=KAWA1DuvCnQ) think so), but really, how bad could it be? After all, while the ergonomics of templates in D are much improved over C++, the underlying mechanism is broadly the same. I was dubious that `std::visit` could be much worse in practice, if at all, than `std.variant.visit`.
+oft-repeated criticism that C++ is complex and inconsistent (even some of its [biggest proponents](https://www.youtube.com/watch?v=KAWA1DuvCnQ) think so), and it _is_ true that the ergonomics of templates in D are vastly improved over C++. Nevertheless, the underlying concepts are the same, and I was dubious that `std::visit` could be much worse in practice, if at all, than `std.variant.visit`.
 
 For the record, my intuition was completely and utterly wrong.
 
