@@ -136,7 +136,7 @@ However, this code is still quite ugly (though I suspect I could get used to the
 - Template argument packs
 - [SFINAE](http://en.cppreference.com/w/cpp/language/sfinae)
 - [User-defined deduction guides](http://en.cppreference.com/w/cpp/language/class_template_argument_deduction)
-- [The allipsis operator (...)](http://www.cplusplus.com/articles/EhvU7k9E/)
+- [The ellipsis operator (...)](http://www.cplusplus.com/articles/EhvU7k9E/)
 - Operator overloading
 - C++-specific metaprogramming techniques
 
