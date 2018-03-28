@@ -16,7 +16,7 @@ For the record, my intuition was completely and utterly wrong.
 
 ## Exploring std.variant
 
-Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type; this is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`; very unfortunate, then, that C++ chose to use the name `variant` for its implementation of a sum type instead. _C'est la vie._ The type is used as follows:
+Before we continue, let me quickly introduce D's [std.variant](https://dlang.org/phobos/std_variant.html) module. The module centres around the [Variant](https://dlang.org/phobos/std_variant.html#.Variant) type: this is not actually a sum type like C++'s `std::variant`, but a type-safe container that can contain a value of any type. It also knows the type of the value it currently contains (if you've ever implemented a type-safe union, you'll realize why that part is important). This is akin to C++'s `std::any` as opposed to `std::variant`; very unfortunate, then, that C++ chose to use the name `variant` for its implementation of a sum type instead. _C'est la vie._ The type is used as follows:
 
 ```D
 import std.variant;
