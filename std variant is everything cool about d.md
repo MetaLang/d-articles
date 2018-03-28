@@ -70,7 +70,7 @@ The `peek` function takes a `Variant` as a runtime argument, and a type `T` as a
 
 <sup>_**Note:** I've made use of [Universal Function Call Syntax](https://dlang.org/spec/function.html#pseudo-member) to call the free function `indexOf` as if it were a member function of `int[]`._<sup>
 
-In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows the user to supply a visitor for each type of value the `Algebraic` may hold, which will be executed _if_ the `Algebraic` holds data of that type at runtime. More on that in a moment.
+In addition, just like C++, D's standard library has a special `visit` function that operates on `Algebraic`. It allows the user to supply a visitor for each type of value the `Algebraic` may hold, which will be executed _iff_ it holds data of that type at runtime. More on that in a moment.
 
 
 ## To recap:
