@@ -80,7 +80,7 @@ foreach((x, y); arr) {
 
 The usual `foreach` storage classes are also supported:
 
-```
+```d
 auto arr = [t(1, 2), t(3, 4)];
 foreach((ref x, y); arr) {
     x = 2 * y;
