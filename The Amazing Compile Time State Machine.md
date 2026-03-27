@@ -1,5 +1,22 @@
-# The Amazing Compile-Time Metaprogramming State Machine: A _statically-verified_ Builder pattern
+---
+title: The Amazing Compile-Time Metaprogramming State Machine
+author: Jared Hanson
 
+# Optional fields
+#
+# Use this if you want override the URL slug that's
+# generated automatically from the filename
+# slug: my-awesome-program-written-in-d (should be URL-friendly)
+#
+# Categories used for search indexing
+categories:
+  - Code
+  - Tutorials
+  - The Language
+  - Metaprogramming
+---
+
+# The Amazing Compile-Time Metaprogramming State Machine
 
 Complex object construction is a classic challenge in software engineering. When an aggregate (a `struct` or `class`) has many fields, constructors become cumbersome ("telescoping constructors"), and direct initialization leaves the door open to uninitialized data.
 
